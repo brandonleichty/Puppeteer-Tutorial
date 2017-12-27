@@ -4,9 +4,9 @@ const CREDS = require('./creds');
 const puppeteer = require('puppeteer');
 
 
-const USERNAME_SELECTOR = '<input autocapitalize="off" autocorrect="off" autofocus="autofocus" class="form-control input-block" id="login_field" name="login" tabindex="1" type="text">'
-const PASSWORD_SELECTOR = '<input class="form-control form-control input-block" id="password" name="password" tabindex="2" type="password">';
-const BUTTON_SELECTOR = '<input class="btn btn-primary btn-block" data-disable-with="Signing in…" name="commit" tabindex="3" value="Sign in" type="submit">'
+const USERNAME_SELECTOR = '#login_field'
+const PASSWORD_SELECTOR = '#password';
+const BUTTON_SELECTOR = 'input.btn'
 
 async function run() {
     const browser = await puppeteer.launch({headless: false});
@@ -14,6 +14,16 @@ async function run() {
 
     await page.goto('https://github.com/login');
     await page.screenshot({ path: 'screenshots/github.png'});
+
+    await page.click(USERNAME_SELECTOR);
+    await page.keyboard.type(CREDS.username);
+
+    await page.click(PASSWORD_SELECTOR);
+    await page.keyboard.type(CREDS.password);
+
+    await page.click(BUTTON_SELECTOR);
+
+    await page.waitForNavigation();
 
     browser.close();
 }
